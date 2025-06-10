@@ -79,7 +79,7 @@ def add_record(records):
 
     while True:
         if step == 1: # 날짜 입력
-            date_input = input("날짜 (YYYY-MM-DD, 예: 2023-01-15): ")
+            date_input = input("날짜 (YYYY-MM-DD, 예: 2025-05-06): ")
             if date_input.lower() in ['이전', 'back']:
                 print("❗ 첫 단계에서는 이전으로 돌아갈 수 없습니다. 등록을 취소하려면 Ctrl+C를 누르세요.")
                 continue
@@ -154,3 +154,40 @@ def add_record(records):
             records.append([date_str, record_type, category, content, amount])
             print("\n✅ 기록이 성공적으로 등록되었습니다.")
             return # 함수 종료 (등록 완료)
+        
+        # 전체 내역 보기
+def show_all_records(records):
+    print("\n--- 전체 내역 보기 ---")
+    if not records:
+        print("❗ 등록된 내역이 없습니다.")
+        return
+
+    # 날짜를 기준으로 정렬
+    sorted_records = sorted(records, key=lambda x: x[0])
+
+    total_income = 0
+    total_expense = 0
+
+    print("-" * 50)
+    print(f"{'날짜':<12}{'분류':<6}{'카테고리':<10}{'내용':<15}{'금액':>10}")
+    print("-" * 50)
+
+    for record in sorted_records:
+        date, rec_type, category, content, amount = record
+        amount_int = int(amount)
+
+        if rec_type == '수입':
+            total_income += amount_int
+            print(f"{date:<12}{rec_type:<6}{category:<10}{content:<15}{amount_int:>10,}")
+        else: # 지출
+            total_expense += amount_int
+            print(f"{date:<12}{rec_type:<6}{category:<10}{content:<15}{-amount_int:>10,}") # 지출은 음수로 표시하여 시각적으로 구분
+
+    print("-" * 50)
+    print(f"총 수입: {total_income:,.0f}원")
+    print(f"총 지출: {total_expense:,.0f}원")
+    print(f"💰 최종 잔액: {total_income - total_expense:,.0f}원")
+    print("-" * 50)
+
+
+    
