@@ -268,4 +268,5 @@ def show_monthly_calendar(records):
     print(f"💰 월별 잔액: {total_monthly_income - total_monthly_expense:,.0f}원")
     print("-" * 70)
 
-    
+    if __name__ == '__main__':
+       main()
