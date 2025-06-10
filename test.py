@@ -190,4 +190,50 @@ def show_all_records(records):
     print("-" * 50)
 
 
+    # 월별 합계 보기
+def show_monthly_calendar(records):
+    print("\n--- 월별 합계 보기 (달력 형식) ---")
+    if not records:
+        print("❗ 등록된 내역이 없습니다.")
+        return
+
+    while True:
+        year_month_input = input("조회할 연월을 입력하세요 (YYYY-MM, 예: 2023-01): ")
+        if year_month_input.lower() in ['이전', 'back']:
+            return # 메인 메뉴로 돌아가기
+        try:
+            year, month = map(int, year_month_input.split('-'))
+            if not (1 <= month <= 12):
+                raise ValueError
+            break
+        except ValueError:
+            print("❗ 올바른 연월 형식(YYYY-MM)으로 입력해주세요.")
+
+    # 해당 월의 기록 필터링 및 일별 합계 계산
+    daily_summary = {} # {일: {'수입': 금액, '지출': 금액}}
+    total_monthly_income = 0
+    total_monthly_expense = 0
+
+    for record in records:
+        date_str, rec_type, category, content, amount_str = record
+        try:
+            record_date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            if record_date.year == year and record_date.month == month:
+                day = record_date.day
+                amount = int(amount_str)
+
+                if day not in daily_summary:
+                    daily_summary[day] = {'수입': 0, '지출': 0}
+
+                if rec_type == '수입':
+                    daily_summary[day]['수입'] += amount
+                    total_monthly_income += amount
+                else: # 지출
+                    daily_summary[day]['지출'] += amount
+                    total_monthly_expense += amount
+        except ValueError:
+            # 날짜 형식 오류가 있는 레코드는 건너뜀
+            continue
+
+
     
