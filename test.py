@@ -235,5 +235,37 @@ def show_monthly_calendar(records):
             # 날짜 형식 오류가 있는 레코드는 건너뜀
             continue
 
+    # 달력 생성 및 출력
+    cal = calendar.Calendar()
+    print(f"\n{year}년 {month}월 가계부")
+    print("=" * 70)
+    print("월    화    수    목    금    토    일")
+    print("-" * 70)
+
+    for week in cal.monthdayscalendar(year, month):
+        for day in week:
+            if day == 0: # 해당 월에 속하지 않는 날짜
+                print(f"{'':<8}", end="")
+            else:
+                summary_text = ""
+                if day in daily_summary:
+                    income_today = daily_summary[day]['수입']
+                    expense_today = daily_summary[day]['지출']
+                    if income_today > 0:
+                        summary_text += f"↑{income_today:,.0f}"
+                    if expense_today > 0:
+                        if summary_text: summary_text += " "
+                        summary_text += f"↓{expense_today:,.0f}"
+
+                # 날짜와 요약 정보를 함께 출력
+                print(f"{str(day).rjust(2):<2} {summary_text:<5}", end="  ")
+        print() # 한 주가 끝나면 줄 바꿈
+
+    print("-" * 70)
+    print(f"\n--- {year}년 {month}월 요약 ---")
+    print(f"총 수입: {total_monthly_income:,.0f}원")
+    print(f"총 지출: {total_monthly_expense:,.0f}원")
+    print(f"💰 월별 잔액: {total_monthly_income - total_monthly_expense:,.0f}원")
+    print("-" * 70)
 
     
