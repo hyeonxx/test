@@ -26,4 +26,3 @@ def save_records(records):
         writer.writerow(['날짜', '분류', '카테고리', '내용', '금액'])
         writer.writerows(records)
 
-
